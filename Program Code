@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct file {
+    char name[50];
+    int size;
+};
+
+void addFile(struct file *files, int *count) {
+    printf("Enter file name: ");
+    scanf("%s", files[*count].name);
+    printf("Enter file size (in KB): ");
+    scanf("%d", &files[*count].size);
+    (*count)++;
+    printf("File added successfully!\n");
+}
+
+void modifyFile(struct file *files, int count) {
+    if (count == 0) {
+        printf("No files found!\n");
+        return;
+    }
+
+    char filename[50];
+    printf("Enter the name of the file to modify: ");
+    scanf("%s", filename);
+
+    for (int i = 0; i < count; i++) {
+        if (strcmp(files[i].name, filename) == 0) {
+            printf("Enter new file size (in KB): ");
+            scanf("%d", &files[i].size);
+            printf("File modified successfully!\n");
+            return;
+        }
+    }
+
+    printf("File not found!\n");
+}
+
+void deleteFile(struct file *files, int *count) {
+    if (*count == 0) {
+        printf("No files found!\n");
+        return;
+    }
+
+    char filename[50];
+    printf("Enter the name of the file to delete: ");
+    scanf("%s", filename);
+
+    for (int i = 0; i < *count; i++) {
+        if (strcmp(files[i].name, filename) == 0) {
+            for (int j = i; j < (*count) - 1; j++) {
+                strcpy(files[j].name, files[j + 1].name);
+                files[j].size = files[j + 1].size;
+            }
+            (*count)--;
+            printf("File deleted successfully!\n");
+            return;
+        }
+    }
+
+    printf("File not found!\n");
+}
+
+void displayFiles(struct file *files, int count) {
+    if (count == 0) {
+        printf("No files found!\n");
+    } else {
+        printf("File List:\n");
+        printf("----------------------------------------------------\n");
+        printf("Name\t\tSize (KB)\n");
+        printf("----------------------------------------------------\n");
+        for (int i = 0; i < count; i++) {
+            printf("%s\t\t%d\n", files[i].name, files[i].size);
+        }
+        printf("----------------------------------------------------\n");
+    }
+}
+
+int main() {
+    struct file files[100];
+    int count = 0;
+    int choice;
+
+    while (1) {
+        printf("\nFile Management System\n");
+        printf("1. Add File\n");
+        printf("2. Modify File\n");
+        printf("3. Delete File\n");
+        printf("4. Display Files\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addFile(files, &count);
+                break;
+            case 2:
+                modifyFile(files, count);
+                break;
+            case 3:
+                deleteFile(files, &count);
+                break;
+            case 4:
+                displayFiles(files, count);
+                break;
+            case 5:
+                printf("Exiting File Management System.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+
+    return 0;
+}
